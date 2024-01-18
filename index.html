@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pie Chart Example</title>
+  <link rel="stylesheet" href="ui/bootstraptheme.css">
+  <script src="ui/jquery/dist/jquery.min.js"></script>
+  <script src="ui/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="ui/lodash/lodash.min.js"></script>
+  <script src="ui/g1/dist/g1.min.js"></script>
+  <script src="ui/vega/build/vega.min.js"></script>
+  <script src="ui/vega-lite/build/vega-lite.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@gramener/gramener@3.76.2/dist/ui.css">
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+
+    .dropdown {
+      position: relative;
+      display: block;
+      margin: 10px;
+      border-radius: 10px;
+    }
+    
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      padding: 12px 16px;
+      z-index: 1;
+    }
+    
+    .dropdown:hover .dropdown-content {
+      display: contents;
+    }
+
+    .dropbtn {
+      border-radius: 10px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    h1,h2{
+      text-align: center;
+    }
+    </style>
+
+</head>
+
+<body>
+  <!-- Add the pie chart container -->
+  <h1>Gramex-visulization</h1>
+
+  <div class="dropdown">
+    <button class="dropbtn">Pie-charts</button>
+    <div class="dropdown-content">
+      <div id="chart"></div>
+      <div id="chart2"></div>
+    </div>
+  </div>
+
+  <div class="dropdown">
+    <button class="dropbtn">Bar-charts</button>
+    <div class="dropdown-content">
+      <div id="barchart"></div>
+      <div id="barchart2"></div>
+    </div>
+  </div>
+
+<script>
+var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+  "description": "A pie chart showing the distribution of Sales by Segment.",
+  "title":'Sales by Segment',
+  "width": 360,
+  "height": 200,
+  "data": {"url": "data?_by=Segment"},
+  "mark": "arc",
+  "encoding": {
+    "theta": {"field": "Sales|sum", "type": "quantitative", "aggregate": "sum"},
+    "color": {"field": "Segment", "type": "nominal"}
+  }
+};
+
+var view = new vega.View(vega.parse(vegaLite.compile(spec).spec))
+    .renderer('svg')
+    .initialize('#chart')
+    .hover()
+    .run();
+</script>
+
+<script>
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+  "description": "A pie chart showing the distribution of Sales by Region.",
+  "title":'Sales by Region',
+  "width": 360,
+  "height": 200,
+  "data": {"url": "data?_by=Region"},  // Assuming your data is grouped by the "Region" column
+  "mark": "arc",
+  "encoding": {
+    "theta": {"field": "Sales|sum", "type": "quantitative", "aggregate": "sum"},
+    "color": {"field": "Region", "type": "nominal"}
+  }
+};
+  
+  var view = new vega.View(vega.parse(vegaLite.compile(spec).spec))
+      .renderer('svg')
+      .initialize('#chart2')
+      .hover()
+      .run();
+</script>
+
+<script>
+var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+  "description": "A bar chart that sorts the y-values by the x-values.",
+  "title":'Sales by Segment',
+  "width": 360,
+  "height": 200,
+  "data": {"url": "data?_by=Segment"},
+  "mark": "bar",
+  "encoding": {
+    "y": {
+      "field": "Segment",
+      "type": "nominal",
+      "sort": {"encoding": "x"},
+      "axis": {"title": "Segment"}
+    },
+    "x": {
+      "field": "Sales|sum",
+      "type": "quantitative",
+      "axis": {"title": "Sales"}
+    }
+  }
+}
+var view = new vega.View(vega.parse(vegaLite.compile(spec).spec))
+    .renderer('svg')
+    .initialize('#barchart')
+    .hover()
+    .run()
+</script>
+
+<script>
+  var spec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+    "description": "A bar chart that sorts the y-values by the x-values.",
+    "title":'Sales by Region',
+    "width": 360,
+    "height": 200,
+    "data": {"url": "data?_by=Region"},
+    "mark": "bar",
+    "encoding": {
+      "y": {
+        "field": "Region",
+        "type": "nominal",
+        "sort": {"encoding": "x"},
+        "axis": {"title": "Region"}
+      },
+      "x": {
+        "field": "Sales|sum",
+        "type": "quantitative",
+        "axis": {"title": "Sales"}
+      }
+    }
+  }
+  var view = new vega.View(vega.parse(vegaLite.compile(spec).spec))
+      .renderer('svg')
+      .initialize('#barchart2')
+      .hover()
+      .run()
+  </script>
+
+  <h2>Store Sales Dataset</h2>
+  <table id="data-table">
+    <!-- The table header will be populated dynamically -->
+    <thead>
+      <tr>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- The table body will be populated dynamically -->
+    </tbody>
+  </table>
+  
+  <button id="show-full-table" onclick="showFullTable()">Show Full Table</button>
+
+<script>
+let fullTableShown = false;
+
+// Fetch data from the /data endpoint
+fetch('/data')
+  .then(response => response.json())
+  .then(data => {
+    // Display only the first 10 rows initially
+    displayRows(data.slice(0, 10));
+  })
+  .catch(error => console.error('Error fetching data:', error));
+
+// Function to display rows in the table
+function displayRows(rows) {
+  // Get the keys (column names) from the first row of the data
+  const keys = Object.keys(rows[0]);
+
+  // Populate the table header
+  const tableHeader = document.querySelector('#data-table thead tr');
+  keys.forEach(key => {
+    const th = document.createElement('th');
+    th.textContent = key;
+    tableHeader.appendChild(th);
+  });
+
+  // Populate the table body
+  const tableBody = document.querySelector('#data-table tbody');
+  tableBody.innerHTML = ''; // Clear existing rows
+
+  rows.forEach(row => {
+    const tr = document.createElement('tr');
+    keys.forEach(key => {
+      const td = document.createElement('td');
+      td.textContent = row[key];
+      tr.appendChild(td);
+    });
+    tableBody.appendChild(tr);
+  });
+}
+
+// Function to show the full table
+function showFullTable() {
+  if (!fullTableShown) {
+    // Fetch data again to get the full table
+    fetch('/data')
+      .then(response => response.json())
+      .then(data => {
+        // Display all rows
+        displayRows(data);
+        fullTableShown = true;
+        document.getElementById('show-full-table').textContent = 'Hide Full Table';
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  } else {
+    // Display only the first 10 rows when hiding the full table
+    fetch('/data')
+      .then(response => response.json())
+      .then(data => {
+        displayRows(data.slice(0, 10));
+        fullTableShown = false;
+        document.getElementById('show-full-table').textContent = 'Show Full Table';
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }
+}
+</script>
+    
+</body>
+</html>
